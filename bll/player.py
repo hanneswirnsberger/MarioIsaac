@@ -6,7 +6,7 @@ from ..bll.base_character import BaseCharacter
 class Player(BaseCharacter):
     def __init__(self, display):
         super().__init__(display)
-        self.sprites = self.load_character_sprites("MarioIsaac/assets/sprites/base_character/my_base_character.png", [64, 64, 64, 64, 64, 64], [64, 64, 64, 64, 64, 64], [12, 12, 8, 8, 8, 8])
+        self.sprites = self.load_character_sprites("MarioIsaac/assets/sprites/base_character/my_base_character_v2.png", [48, 48, 48, 48, 48, 48], [48, 48, 48, 48, 48, 48], [12, 12, 8, 8, 8, 8])
         self.image = self.sprites["idle_down_right"][0]
         self.current_state = "idle"
         self.current_x_direction = "right"
@@ -16,9 +16,9 @@ class Player(BaseCharacter):
         self.last_pressed_direction = None
         self.attack_counter = 0
         self.frame_counts = {
-            "idle": 60,
-            "run": 40,
-            "attack": 40,
+            "idle": 12,
+            "run": 8,
+            "attack": 8,
         }
         self.sprite_frames = {
             "idle": 12,
@@ -28,7 +28,7 @@ class Player(BaseCharacter):
 
     def _increment_frame(self):
         self.current_frame_index += 1
-        total_frames = self.frame_counts.get(self.current_state, 5)
+        total_frames = self.frame_counts.get(self.current_state, 5) * (self.sprite_frames.get(self.current_state, 12) - 1)
         if self.current_frame_index > total_frames:
             self.current_frame_index = 0
 
@@ -69,7 +69,7 @@ class Player(BaseCharacter):
         old_center = self.rect.center
         self.rect = self.image.get_rect()
         self.rect.center = old_center
-        self.rect.inflate_ip(-40, -40)
+        # self.rect.inflate_ip(-40, -40)
 
     def _select_image(self):
         if self.current_state == "idle":
