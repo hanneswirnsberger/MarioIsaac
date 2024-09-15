@@ -22,65 +22,41 @@ class Goblin(BaseCharacter):
             "run": 8,
             "attack": 8,
         }
+        self.speed = 1
+        self.attack_range = 20
 
-    def _increment_frame(self):
-        self.current_frame_index += 1
-        total_frames = self.frame_counts.get(self.current_state, 5) * (self.sprite_frames.get(self.current_state, 12) - 1)
-        if self.current_frame_index > total_frames:
-            self.current_frame_index = 0
-
-    def _apply_mask(self):
-        self.mask = pygame.mask.from_surface(self.image)
-
-    def _select_idle_image(self):
-        frame_count = self.frame_counts.get("idle", 12)
-        if self.current_y_direction == "up":
-            self.image = self.sprites["idle_up"][self.current_frame_index // frame_count]
+    def move_to_player(self, player_pos):
+        if player_pos[0] < self.rect.x:
+            x_direction = -1
+            self.current_x_direction = "left"
+        elif player_pos[0] > self.rect.x:
+            x_direction = 1
+            self.current_x_direction = "right"
         else:
-            if self.current_x_direction == "right":
-                self.image = self.sprites["idle_down_right"][self.current_frame_index // frame_count]
-            elif self.current_x_direction == "left":
-                self.image = self.sprites["idle_down_left"][self.current_frame_index // frame_count]
+            x_direction = 0
 
-    def _select_run_image(self):
-        frame_count = self.frame_counts.get("run", 8)
-        if self.current_y_direction == "up":
-            self.image = self.sprites["run_up"][self.current_frame_index // frame_count]
+        if player_pos[1] < self.rect.y:
+            y_direction = -1
+            self.current_y_direction = "up"
+        elif player_pos[1] > self.rect.y:
+            y_direction = 1
+            self.current_y_direction = "down"
         else:
-            if self.current_x_direction == "right":
-                self.image = self.sprites["run_down_right"][self.current_frame_index // frame_count]
-            elif self.current_x_direction == "left":
-                self.image = self.sprites["run_down_left"][self.current_frame_index // frame_count]
+            y_direction = 0
+        self.move(x_direction, y_direction)
+        self.current_state = "run"
 
-    def _select_attack_image(self):
-        frame_count = self.frame_counts.get("attack", 8)
-        if self.current_y_direction == "up":
-            self.image = self.sprites["attack_up"][self.current_frame_index // frame_count]
-        else:
-            if self.current_x_direction == "right":
-                self.image = self.sprites["attack_down_right"][self.current_frame_index // frame_count]
-            elif self.current_x_direction == "left":
-                self.image = self.sprites["attack_down_left"][self.current_frame_index // frame_count]
+    def is_in_attack_range(self, player_pos):
+        in_range = False
+        if abs(self.rect.x - player_pos[0]) <= self.attack_range:
+            in_range = True
+        elif abs(self.rect.y - player_pos[1]) <= self.attack_range:
+            in_range = True
+        return in_range
 
-    def _update_rectangle(self):
-        old_center = self.rect.center
-        self.rect = self.image.get_rect()
-        self.rect.center = old_center
-        # self.rect.inflate_ip(-40, -40)
 
-    def _select_image(self):
-        if self.current_state == "idle":
-            self._select_idle_image()
-        elif self.current_state == "run":
-            self._select_run_image()
-        elif self.current_state == "attack":
-            self._select_attack_image()
-        self._update_rectangle()
-
-    def update_sprite(self):
-        self._increment_frame()
-        self._select_image()
-        self._apply_mask()
-
-    def update(self):
+    def update(self, player_pos):
+        self.move_to_player(player_pos)
+        if self.is_in_attack_range(player_pos):
+            self.attack()
         self.update_sprite()

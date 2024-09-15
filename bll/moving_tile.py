@@ -10,6 +10,7 @@ class MovingTile(Tile):
         self.speed = 0
         super().__init__(display)
         self.display_width, self.display_height = display.get_size()
+        self.last_pressed_direction = None
 
     def move(self, dx, dy):
         self.update_old_rect()
