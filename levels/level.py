@@ -14,10 +14,10 @@ class Level:
         "100000000001",
         "100000000001",
         "100000000001",
-        "100000000001",
-        "100000003001",
+        "100000000301",
         "100000000001",
         "100000303001",
+        "100000000001",
         "111111111111",
     ]
 
@@ -31,6 +31,8 @@ class Level:
         self.initialise_player()
         self.initialise_goblins()
         self.all_sprites.add(self.player)
+        for goblin in self.goblins:
+            self.all_sprites.add(goblin)
         self.camera_offset_x = 0
         self.camera_offset_y = 0
 
@@ -40,7 +42,7 @@ class Level:
             for x, column in enumerate(rows):
                 if column == "3":
                     goblin = Goblin(self.display)
-                    self.goblin.rect = goblin.image.get_rect(
+                    goblin.rect = goblin.image.get_rect(
                         topleft=(x * 64, y * 64)
                     )
                     goblin.mask = pygame.mask.from_surface(goblin.image)

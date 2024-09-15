@@ -26,6 +26,12 @@ class Game:
                     self.level.player.draw_rect_border = not self.level.player.draw_rect_border
                 elif event.key == pygame.K_p:
                     self.level.player.color_mask = not self.level.player.color_mask
+                elif event.key == pygame.K_k:
+                    for goblin in self.level.goblins:
+                        goblin.draw_rect_border = not goblin.draw_rect_border
+                elif event.key == pygame.K_l:
+                    for goblin in self.level.goblins:
+                        goblin.color_mask = not goblin.color_mask
                 elif event.key == pygame.K_SPACE:
                     self.level.player.attack()
 
