@@ -102,6 +102,8 @@ class Level:
 
     def update(self):
         self.player.update()
+        for goblin in self.goblins:
+            goblin.update()
         self.handle_vertical_collision()
         self.handle_horizontal_collision()
         self.update_camera()
