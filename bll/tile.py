@@ -2,19 +2,21 @@ import pygame
 
 
 class Tile(pygame.sprite.Sprite):
-    def __init__(self, display):
+    def __init__(self, display, surface=None):
         super().__init__()
         self.display = display
-        image = pygame.Surface((100, 100))
-        self.mask = pygame.mask.from_surface(image)
-        self.rect = image.get_rect(topleft=(10, 10))
+        if surface != None:
+            self.image = surface
+        else:
+            self.image = pygame.Surface((100, 100))
+        self.mask = pygame.mask.from_surface(self.image)
+        self.rect = self.image.get_rect()
         self.old_rect = self.rect
         self.max_offset = 200
         self.draw_rect_border = False
         self.color_mask = False
 
     def draw_mask(self, offset_x, offset_y, color=(128, 0, 128)):
-        """Dessine la forme du masque en mauve."""
         mask_surface = pygame.Surface(self.image.get_size(), pygame.SRCALPHA)
         width, height = self.mask.get_size()
         for x in range(width):

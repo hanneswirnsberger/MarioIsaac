@@ -3,9 +3,10 @@ import pygame
 from ..bll.player import Player
 from ..bll.tile import Tile
 from ..bll.goblin import Goblin
+from ..bll.collision_handler import CollisionHandler
 
 
-class Level:
+class Level(CollisionHandler):
     level_one = [
         "111111111111",
         "100000000001",
@@ -22,26 +23,33 @@ class Level:
     ]
 
     def __init__(self, display):
+        super().__init__()
         self.current_level = 1
         self.display = display
         self.all_sprites = pygame.sprite.Group()
-        self.world_tiles = self.create_world_tiles()
-        for tile in self.world_tiles:
-            self.all_sprites.add(tile)
+        self.initialise_world()
+
         self.initialise_player()
         self.initialise_goblins()
-        self.all_sprites.add(self.player)
+        for tile in self.world_tiles:
+            self.all_sprites.add(tile)
         for goblin in self.goblins:
             self.all_sprites.add(goblin)
+        self.all_sprites.add(self.player)
+
         self.camera_offset_x = 0
         self.camera_offset_y = 0
 
+    def initialise_world(self):
+        self.world_tiles = self.create_world_tiles()
+
     def initialise_goblins(self):
+        sprite_sheet_path = "MarioIsaac/assets/sprites/orcs/goblin.png"
         goblins = []
         for y, rows in enumerate(self.level_one):
             for x, column in enumerate(rows):
                 if column == "3":
-                    goblin = Goblin(self.display)
+                    goblin = Goblin(self.display, sprite_sheet_path)
                     goblin.rect = goblin.image.get_rect(
                         topleft=(x * 64, y * 64)
                     )
@@ -50,7 +58,8 @@ class Level:
         self.goblins = goblins
 
     def initialise_player(self):
-        self.player = Player(self.display)
+        sprite_sheet_path = "MarioIsaac/assets/sprites/base_character/my_base_character_v2.png"
+        self.player = Player(self.display, sprite_sheet_path)
         if self.current_level == 1:
             for y, rows in enumerate(self.level_one):
                 for x, column in enumerate(rows):
@@ -84,28 +93,12 @@ class Level:
         self.camera_offset_x = self.player.rect.centerx - self.display.get_width() // 2
         self.camera_offset_y = self.player.rect.centery - self.display.get_height() // 2
 
-    def handle_vertical_collision(self):
-        for tile in self.world_tiles:
-            if pygame.sprite.collide_mask(self.player, tile):
-                if self.player.last_pressed_direction == "down" and self.player.rect.bottom > tile.rect.top:
-                    self.player.rect.bottom = tile.rect.top
-                elif self.player.last_pressed_direction == "up" and self.player.rect.top < tile.rect.bottom:
-                    self.player.rect.top = tile.rect.bottom
-
-    def handle_horizontal_collision(self):
-        for tile in self.world_tiles:
-            if pygame.sprite.collide_mask(self.player, tile):
-                if self.player.last_pressed_direction == "right" and self.player.rect.right > tile.rect.left:
-                    self.player.rect.right = tile.rect.left
-                elif self.player.last_pressed_direction == "left" and self.player.rect.left <  tile.rect.right:
-                    self.player.rect.left = tile.rect.right
-
     def update(self):
         self.player.update()
         for goblin in self.goblins:
             goblin.update((self.player.rect.x, self.player.rect.y))
-        self.handle_vertical_collision()
-        self.handle_horizontal_collision()
+        self.handle_collisions()
+
         self.update_camera()
 
     def draw(self):

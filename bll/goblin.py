@@ -4,13 +4,14 @@ from ..bll.base_character import BaseCharacter
 
 
 class Goblin(BaseCharacter):
-    def __init__(self, display):
-        super().__init__(display)
-        self.sprites = self.load_character_sprites("MarioIsaac/assets/sprites/orcs/goblin.png", [48, 48, 48, 48, 64, 64], [48, 48, 48, 48, 64, 64], [4, 4, 8, 8, 8, 8])
+    def __init__(self, display, sprite_sheet_path):
+        super().__init__(display, sprite_sheet_path)
+        self.sprites = self.load_character_sprites(
+            [48, 48, 48, 48, 64, 64],
+            [48, 48, 48, 48, 64, 64],
+            [4, 4, 8, 8, 8, 8],
+        )
         self.image = self.sprites["idle_down_right"][0]
-        self.current_state = "idle"
-        self.current_x_direction = "right"
-        self.current_y_direction = "down"
         self.current_frame_index = 0
         self.frame_counts = {
             "idle": 4,
@@ -23,7 +24,9 @@ class Goblin(BaseCharacter):
             "attack": 8,
         }
         self.speed = 1
-        self.attack_range = 20
+        self.life_points = 5
+        self.attack_range = 100
+        self.attack_power = 1
 
     def move_to_player(self, player_pos):
         if player_pos[0] < self.rect.x:
@@ -48,12 +51,9 @@ class Goblin(BaseCharacter):
 
     def is_in_attack_range(self, player_pos):
         in_range = False
-        if abs(self.rect.x - player_pos[0]) <= self.attack_range:
-            in_range = True
-        elif abs(self.rect.y - player_pos[1]) <= self.attack_range:
+        if abs(self.rect.x - player_pos[0]) <= self.attack_range and abs(self.rect.y - player_pos[1]) <= self.attack_range:
             in_range = True
         return in_range
-
 
     def update(self, player_pos):
         self.move_to_player(player_pos)
