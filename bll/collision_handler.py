@@ -21,7 +21,7 @@ class CollisionHandler:
                 elif self.player.last_pressed_direction == "left" and self.player.rect.left <  tile.rect.right:
                     self.player.rect.left = tile.rect.right
 
-    def _handle_goblin_collision(self):
+    def _handle_goblins_collision(self):
         for goblin in self.goblins:
             for tile in self.world_tiles:
                 if pygame.sprite.collide_mask(goblin, tile):
@@ -42,4 +42,4 @@ class CollisionHandler:
     def handle_collisions(self):
         self._handle_vertical_collision()
         self._handle_horizontal_collision()
-        self._handle_goblin_collision()
+        self._handle_goblins_collision()
