@@ -28,6 +28,12 @@ class AnimationController:
     def _apply_mask(self):
         self.mask = pygame.mask.from_surface(self.image)
 
+
+# TO DO: i habs ma kurz angschaut und du könntest statt de 3 methoden select idle/run/attack image 
+# anfach nure eine machen de dann ka ""_select_image" hast und als übergabe paramter halt idle/run/attack bekommt 
+# sowas wie --> _select_image("attack")
+# weil der code is ja fast gleich 
+
     def _select_idle_image(self):
         frame_count = self.frame_counts.get("idle", 12)
         if self.current_y_direction == "up":
@@ -48,7 +54,7 @@ class AnimationController:
             elif self.current_x_direction == "left":
                 self.image = self.sprites["run_down_left"][self.current_frame_index // frame_count]
 
-    def _select_attack_image(self):
+    def _select_attack_image(self): 
         frame_count = self.frame_counts.get("attack", 8)
         if self.current_y_direction == "up":
             self.image = self.sprites["attack_up"][self.current_frame_index // frame_count]
@@ -60,11 +66,11 @@ class AnimationController:
 
     def _select_image(self):
         if self.current_state == "idle":
-            self._select_idle_image()
+            self._select_idle_image() #_select_image("idle")
         elif self.current_state == "run":
-            self._select_run_image()
+            self._select_run_image()#_select_image("run")
         elif self.current_state == "attack":
-            self._select_attack_image()
+            self._select_attack_image()#_select_image("attack")
         self._update_rectangle()
 
     def _update_rectangle(self):
