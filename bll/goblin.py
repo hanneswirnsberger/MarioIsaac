@@ -28,6 +28,12 @@ class Goblin(BaseCharacter):
         self.attack_range = 100
         self.attack_power = 1
 
+    def _is_in_attack_range(self, player_pos):
+        in_range = False
+        if abs(self.rect.x - player_pos[0]) <= self.attack_range and abs(self.rect.y - player_pos[1]) <= self.attack_range:
+            in_range = True
+        return in_range
+
     def move_to_player(self, player_pos):
         if player_pos[0] < self.rect.x:
             x_direction = -1
@@ -49,14 +55,8 @@ class Goblin(BaseCharacter):
         self.move(x_direction, y_direction)
         self.current_state = "run"
 
-    def is_in_attack_range(self, player_pos):
-        in_range = False
-        if abs(self.rect.x - player_pos[0]) <= self.attack_range and abs(self.rect.y - player_pos[1]) <= self.attack_range:
-            in_range = True
-        return in_range
-
     def update(self, player_pos):
         self.move_to_player(player_pos)
-        if self.is_in_attack_range(player_pos):
+        if self._is_in_attack_range(player_pos):
             self.attack()
         self.update_sprite()

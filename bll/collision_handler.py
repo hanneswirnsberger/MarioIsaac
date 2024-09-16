@@ -30,7 +30,14 @@ class CollisionHandler:
             if pygame.sprite.collide_mask(goblin, self.player):
                 print("Collision between the golbin and the player")
                 self.player.take_damage(goblin.attack_power)
-                print(self.player.life_points)
+
+            for other_goblin in self.goblins:
+                if other_goblin is not goblin:
+                    if pygame.sprite.collide_mask(goblin, other_goblin):
+                        if goblin.rect.centerx < other_goblin.rect.centerx:
+                            goblin.rect.right = other_goblin.rect.left
+                        elif goblin.rect.centerx > other_goblin.rect.centerx:
+                            goblin.rect.left = other_goblin.rect.right
 
     def handle_collisions(self):
         self._handle_vertical_collision()

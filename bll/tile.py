@@ -2,16 +2,16 @@ import pygame
 
 
 class Tile(pygame.sprite.Sprite):
-    def __init__(self, display, surface=None):
+    def __init__(self, display, image=None):
         super().__init__()
         self.display = display
-        if surface != None:
-            self.image = surface
+        if image != None:
+            self.image = image
         else:
             self.image = pygame.Surface((100, 100))
         self.mask = pygame.mask.from_surface(self.image)
         self.rect = self.image.get_rect()
-        self.old_rect = self.rect
+        self.old_rect = self.rect.copy()
         self.max_offset = 200
         self.draw_rect_border = False
         self.color_mask = False
@@ -26,7 +26,7 @@ class Tile(pygame.sprite.Sprite):
 
         self.display.blit(mask_surface, (self.rect.x - offset_x, self.rect.y - offset_y))
 
-    def draw(self, offset_x, offset_y, draw_rect_border=False):
+    def draw(self, offset_x, offset_y):
         self.display.blit(self.image, (self.rect.x - offset_x, self.rect.y - offset_y))
         if self.draw_rect_border:
             pygame.draw.rect(self.display, (255, 0, 0), self.rect.move(-offset_x, -offset_y), 1)

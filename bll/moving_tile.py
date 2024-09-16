@@ -1,15 +1,10 @@
-import pygame
-
 from ..bll.tile import Tile
 
 
 class MovingTile(Tile):
-    def __init__(
-        self, display, width: int = 100, height: int = 100, x: int = 10, y: int = 10
-    ):
-        self.speed = 0
+    def __init__(self, display):
         super().__init__(display)
-        self.display_width, self.display_height = display.get_size()
+        self.speed = 0
         self.last_pressed_direction = None
 
     def move(self, dx, dy):

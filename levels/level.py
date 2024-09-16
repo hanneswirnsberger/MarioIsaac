@@ -26,17 +26,15 @@ class Level(CollisionHandler):
         super().__init__()
         self.current_level = 1
         self.display = display
-        self.all_sprites = pygame.sprite.Group()
         self.initialise_world()
-
         self.initialise_player()
         self.initialise_goblins()
+        self.all_sprites = pygame.sprite.Group()
         for tile in self.world_tiles:
             self.all_sprites.add(tile)
         for goblin in self.goblins:
             self.all_sprites.add(goblin)
         self.all_sprites.add(self.player)
-
         self.camera_offset_x = 0
         self.camera_offset_y = 0
 
@@ -105,7 +103,7 @@ class Level(CollisionHandler):
         self.display.fill((255, 255, 255))
         for sprite in self.all_sprites:
             if sprite == self.player:
-                sprite.draw(self.camera_offset_x, self.camera_offset_y, True)
+                sprite.draw(self.camera_offset_x, self.camera_offset_y)
             else:
                 sprite.draw(self.camera_offset_x, self.camera_offset_y)
 
